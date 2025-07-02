@@ -1,7 +1,13 @@
 FROM eclipse-temurin:8-jre-alpine
 
 VOLUME /tmp
-ADD target/oms-eureka-service-0.0.1-SNAPSHOT.jar oms-eureka.jar
-RUN sh -c 'touch /oms-eureka.jar'
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/oms-eureka.jar"]
-EXPOSE 8761
+
+# Copy the only JAR in the target folder into the image
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
+
+RUN sh -c 'touch /app.jar'
+
+ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app.jar"]
+
+EXPOSE 8080
